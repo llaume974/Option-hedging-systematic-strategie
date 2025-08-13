@@ -1,6 +1,6 @@
 # Kernel Distribution, Option Covering & Systematic Strategy
 
-**Authors:** Guillaume Attila
+**Authors:** Guillaume Attila  
 **Supervisor:** Matthieu Garcin  
 **Date:** March 16, 2024
 
@@ -43,7 +43,7 @@ We explore statistical methods for financial asset management: non-parametric de
 
 ## 1. Introduction
 
-Financial decisions hinge on the distribution of returns. Non-parametric kernel density estimators (KDE) are flexible but depend critically on the *bandwidth* \(h\). We study several data-driven criteria for \(h\), then leverage these densities to:  
+Financial decisions hinge on the distribution of returns. Non-parametric kernel density estimators (KDE) are flexible but depend critically on the *bandwidth* $h$. We study several data-driven criteria for $h$, then leverage these densities to:  
 - Forecast option returns and risk (e.g., VaR on options), and  
 - Build systematic strategies using density-derived statistics (expected returns, distributional signals).
 
@@ -51,52 +51,51 @@ Financial decisions hinge on the distribution of returns. Non-parametric kernel 
 
 ## 2. Non-parametric Density Estimation
 
-Given i.i.d. \(X_1,\dots,X_n\) with density \(f\), the kernel estimator is
+Given i.i.d. $X_1,\dots,X_n$ with density $f$, the kernel estimator is
 
 $$
 \hat f_h(x)=\frac{1}{nh}\sum_{i=1}^{n} K\left(\frac{x - X_i}{h}\right),\qquad
 \hat F_h(x)=\frac{1}{n}\sum_{i=1}^{n} \kappa\left(\frac{x - X_i}{h}\right)
 $$
 
-
 with common kernels (Gaussian, Epanechnikov, Tophat, etc.).
 
 ### 2.1 Classical: Rule of Thumb, AMISE, LOOCV
 
-- **Scott (1992)**: \(h\approx 3.5\,\hat\sigma\,n^{-1/3}\)  
-- **Silverman (1986)**: \(h=0.9\min(\hat\sigma,\mathrm{IQR}/1.34)\,n^{-1/5}\)  
-- **AMISE**: closed-form minimizer using \(R(K)\) and \(R(f'')\) yields \(h_{\text{AMISE}}\propto n^{-1/5}\).  
-- **LOOCV**: maximize \(\sum_i \log \hat f_{-i}(x_i;h)\).
+- **Scott (1992)**: $h\approx 3.5\,\hat\sigma\,n^{-1/3}$  
+- **Silverman (1986)**: $h=0.9\min(\hat\sigma,\mathrm{IQR}/1.34)\,n^{-1/5}$  
+- **AMISE**: closed-form minimizer using $R(K)$ and $R(f'')$ yields $h_{\text{AMISE}}\propto n^{-1/5}$.  
+- **LOOCV**: maximize $\sum_i \log \hat f_{-i}(x_i;h)$.
 
 Empirically, Silverman and AMISE gave smooth fits on returns, while LOOCV’s optimum could oversmooth depending on the sample.
 
 ### 2.2 MCMC Bandwidth
 
-We use Metropolis–Hastings to sample plausible \(h\) values by likelihood, then average accepted \(h\)’s. This produced realistic densities closely matching the data histogram, and we retained the posterior-mean \(h\) for later use.
+We use Metropolis–Hastings to sample plausible $h$ values by likelihood, then average accepted $h$’s. This produced realistic densities closely matching the data histogram, and we retained the posterior-mean $h$ for later use.
 
 ### 2.3 PIT Bandwidth
 
-We transform predictive CDF values via the **Probability Integral Transform** and pick \((h,w)\) (with exponential forgetting \(w\)) that best matches Uniform\([0,1]\) (via a distance \(d_\nu\)). The selected \(h\) coincides with well-calibrated predictive distributions.
+We transform predictive CDF values via the **Probability Integral Transform** and pick $(h,w)$ (with exponential forgetting $w$) that best matches $\mathrm{Uniform}[0,1]$ (via a distance $d_\nu$). The selected $h$ coincides with well-calibrated predictive distributions.
 
 ### 2.4 Complexity-based Bandwidth
 
-We maximize a complexity measure that is small under **underfitting** (KDE too close to Gaussian) and **overfitting** (KDE too close to empirical CDF), selecting \(h\) at the “sweet spot” between both extremes.
+We maximize a complexity measure that is small under **underfitting** (KDE too close to Gaussian) and **overfitting** (KDE too close to empirical CDF), selecting $h$ at the “sweet spot” between both extremes.
 
 ---
 
 ## 3. Conditional Densities
 
-For covariate \(x\) (e.g., volume) and response \(y\) (return), the kernel conditional density is
+For covariate $x$ (e.g., volume) and response $y$ (return), the kernel conditional density is
 
-\[
+$$
 \hat f(y\mid x)=\frac{\hat g(x,y)}{\hat h(x)},\quad
-\hat g(x,y)=\frac1{nab}\sum_{j=1}^n K\!\left(\frac{\lVert x-X_j\rVert}{a}\right)K\!\left(\frac{\lVert y-Y_j\rVert}{b}\right),\quad
-\hat h(x)=\frac1{na}\sum_{j=1}^n K\!\left(\frac{\lVert x-X_j\rVert}{a}\right).
-\]
+\hat g(x,y)=\frac{1}{nab}\sum_{j=1}^{n} K\left(\frac{\lVert x-X_j\rVert}{a}\right)K\left(\frac{\lVert y-Y_j\rVert}{b}\right),\quad
+\hat h(x)=\frac{1}{na}\sum_{j=1}^{n} K\left(\frac{\lVert x-X_j\rVert}{a}\right).
+$$
 
 ### 3.1 Bootstrap Selection
 
-We select \(a,b\) by minimizing bootstrap average error (integrated squared distance). Large bandwidths oversmooth; alternative divergences (e.g., KL) may improve sensitivity.
+We select $a,b$ by minimizing bootstrap average error (integrated squared distance). Large bandwidths oversmooth; alternative divergences (e.g., KL) may improve sensitivity.
 
 ### 3.2 Threshold on Volume
 
@@ -114,11 +113,11 @@ We apply the toolkit to **stocks** (e.g., AAPL, MC.PA), **commodities** (GC=F), 
 
 ### 5.1 Future Option Value Distribution
 
-From historical daily returns, we **resample** via bootstrap to simulate price paths \(S_t\) and obtain the distribution of option values at horizon \(k\). We also invert Black–Scholes to get **implied volatility** via Newton–Raphson.
+From historical daily returns, we **resample** via bootstrap to simulate price paths $S_t$ and obtain the distribution of option values at horizon $k$. We also invert Black–Scholes to get **implied volatility** via Newton–Raphson.
 
 ### 5.2 Risk Measures & Vol Forecasting
 
-- **VaR from KDE** at \(95\%\): worst expected loss not exceeded with prob. 95%.  
+- **VaR from KDE** at $95\%$: worst expected loss not exceeded with prob. $95\%$.  
 - **CVaR**: mean loss beyond VaR.  
 - **GARCH(1,1)** forecasts volatility clusters to time-vary risk.
 
@@ -136,7 +135,7 @@ A Python `Backtest` class computes portfolio value under signals, with **transac
 
 ### 6.2 KDE Expected Return + Volatility
 
-We estimate **expected return** and **volatility** from KDE over rolling windows; signals go **long** when expectation \(>\) 0 and volatility exceeds a threshold (to avoid noise), **flat/sell** otherwise.
+We estimate **expected return** and **volatility** from KDE over rolling windows; signals go **long** when expectation $> 0$ and volatility exceeds a threshold (to avoid noise), **flat/sell** otherwise.
 
 **Illustrative example (index level):**  
 - Strategy — lower MaxDD and Vol with higher Total Return vs benchmark in sample.  
@@ -175,4 +174,3 @@ We provide a practical pipeline: **estimate KDEs with robust bandwidths**, exten
 11. Israelov, R., & Kelly, B. T. (2017). Forecasting the distribution of option returns. SSRN.
 
 ---
-
