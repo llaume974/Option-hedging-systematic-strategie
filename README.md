@@ -53,10 +53,11 @@ Financial decisions hinge on the distribution of returns. Non-parametric kernel 
 
 Given i.i.d. \(X_1,\dots,X_n\) with density \(f\), the kernel estimator is
 
-\[
-\hat f_h(x)=\frac1{nh}\sum_{i=1}^n K\!\left(\frac{x-X_i}{h}\right),\qquad
-\hat F_h(x)=\frac1n\sum_{i=1}^n \kappa\!\left(\frac{x-X_i}{h}\right),
-\]
+$$
+\hat f_h(x)=\frac{1}{nh}\sum_{i=1}^{n} K\left(\frac{x - X_i}{h}\right),\qquad
+\hat F_h(x)=\frac{1}{n}\sum_{i=1}^{n} \kappa\left(\frac{x - X_i}{h}\right)
+$$
+
 
 with common kernels (Gaussian, Epanechnikov, Tophat, etc.).
 
